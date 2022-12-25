@@ -6,7 +6,9 @@ Flask-ChartJS provides a simple interface to use ChartJS javascript library with
 
 Install the extension with pip:
 
-`pip install flask-chartjs`
+```bash
+pip install flask-chartjs
+```
 
 ## Usage
 

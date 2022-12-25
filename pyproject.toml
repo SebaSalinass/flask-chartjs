@@ -1,10 +1,14 @@
 [tool.poetry]
 name = "flask-chartjs-manager"
-version = "0.1.0"
+version = "0.1.2"
 description = ""
 authors = ["Sebastian Salinas <seba.salinas.delrio@gmail.com>"]
 readme = "README.md"
 packages = [{include = "flask_chartjs"}]
+
+[tool.poetry.urls]
+"Homepage" = "https://github.com/SebaSalinass/flask-chartjs"
+"Bug Tracker" = "https://github.com/SebaSalinass/flask-chartjs/issues"
 
 [tool.poetry.dependencies]
 python = "^3.8"
