@@ -1,0 +1,5 @@
+{% if csp_nonce %}
+<script nonce="{{ csp_nonce() }}" src="{{ url_for('static', filename='chartjs.min.js') }}"></script>
+{% else %}
+<script src="{{ url_for('static', filename='chartjs.min.js') }}"></script>
+{% endif %}

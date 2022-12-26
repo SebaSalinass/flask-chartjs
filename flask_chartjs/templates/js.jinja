@@ -1,0 +1,12 @@
+{% set var_name = 'chart_' + chart.id | replace('-', '_')  %}
+{% set canvas_id = 'canvas_' + chart.id | replace('-', '_') %}
+<script nonce={{ csp_nonce() if csp_nonce else '' }}>
+    {% if use_htmx %}
+    var {{ var_name }} = htmx.find("#{{ canvas_id }}")
+    {% else %}
+    var {{ var_name }} = document.querySelector("#{{ canvas_id }}")
+    {% endif  %}
+    new Chart({{ var_name }},
+        {{ chart.to_json() | safe }}
+        );
+</script>
