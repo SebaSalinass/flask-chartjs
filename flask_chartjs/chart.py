@@ -6,7 +6,8 @@ from dataclasses import dataclass, field
 
 PaddingType = Union[int, Dict[Literal['left', 'top', 'right', 'bottom'], int]]
 AxisType = Literal['x', 'y']
-ChartType = Literal['area', 'bar', 'bubble', 'doughnut', 'pie', 'line', 'polarArea', 'radar', 'scatter']
+ChartType = Literal['area', 'bar', 'bubble', 'doughnut',
+                    'pie', 'line', 'polarArea', 'radar', 'scatter']
 AlignmentType = Literal['center', 'left', 'right']
 
 
@@ -89,21 +90,22 @@ class Chart:
         """
         plugins = self.options.setdefault('plugins', dict())
         title = plugins.setdefault('title', dict(display=True, text=text))
-        
+        self._title = text
+
         if padding:
             title['padding'] = padding
 
     def set_axis_tick_callback(self, axis: AxisType, callback: str) -> None:
         TOKEN = f'{axis}_tick_callback'
         self._ticks_callbacks[TOKEN] = callback
-        
+
         scales = self.options.setdefault('scales', dict())
-        axis = scales.setdefault(axis, dict()) 
+        axis = scales.setdefault(axis, dict())
         axis['ticks'] = dict(callback=TOKEN)
 
-    def set_axis_title(self, axis: AxisType,  text: str, align: AlignmentType = 'center', 
+    def set_axis_title(self, axis: AxisType,  text: str, align: AlignmentType = 'center',
                        weight: str = None, size: int = 12) -> None:
-        
+
         scales = self.options.setdefault('scales', dict())
         axis = scales.setdefault(axis, dict())
         axis['title'] = dict(
@@ -137,4 +139,3 @@ class Chart:
             return_str.replace(f'\"{token}\"', value)
 
         return return_str
-
