@@ -5,7 +5,7 @@ from markupsafe import Markup
 from .chart import Chart, DataSet
 
 
-__all__ = ('ChartJS', 'Chart', 'DataSet')
+__all__ = ('ChartJSManager', 'Chart', 'DataSet')
 
 
 class ChartJSManager:
