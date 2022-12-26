@@ -35,7 +35,7 @@ class ChartJSManager:
     def _render_load_chartjs(self) -> Markup:
         return Markup(render_template('load_chartjs.jinja'))
 
-    def _render_chart(self, chart: Chart, options: Dict[str, Any], html_only: bool = False,
+    def _render_chart(self, chart: Chart, options: Dict[str, Any] = None, html_only: bool = False,
                       js_only: bool = False, use_htmx: bool = False) -> Markup:
         html_str, js_str = '', ''
         if not js_only:
