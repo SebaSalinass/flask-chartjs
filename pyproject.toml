@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "flask-chartjs-manager"
-version = "0.1.2"
+version = "0.1.4"
 description = ""
 authors = ["Sebastian Salinas <seba.salinas.delrio@gmail.com>"]
 readme = "README.md"

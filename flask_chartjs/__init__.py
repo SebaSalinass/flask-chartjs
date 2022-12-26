@@ -1,7 +1,6 @@
 from typing import Optional, Callable, Dict, Any
 
-from flask import Flask, Blueprint, render_template, render_template_string
-from markupsafe import Markup
+from flask import Flask, Blueprint, Markup, render_template
 from .chart import Chart, DataSet
 
 
@@ -12,18 +11,18 @@ class ChartJSManager:
 
     app: Optional[Flask]
     config: Optional[dict]
-    _blueprint: Blueprint
     _nonce_callback: Optional[Callable[[], str]] = None
 
     def __init__(self, app: Optional[Flask] = None) -> None:
-        self._blueprint = Blueprint('chartjs', __name__, template_folder='templates', static_folder='static')
 
         if app is not None:
             self.init_app(app)
 
     def init_app(self, app: Flask) -> None:
         self.app = app
-        self.app.register_blueprint(self._blueprint)
+        blueprint = Blueprint('chartjs', __name__, template_folder='templates',
+                              static_folder='static', static_url_path='/chartjs' + app.static_url_path)
+        self.app.register_blueprint(blueprint)
 
         if not hasattr(app, 'extensions'):
             app.extensions = {}
@@ -41,9 +40,9 @@ class ChartJSManager:
         html_str, js_str = '', ''
         if not js_only:
             html_str = render_template('html.jinja', chart=chart)
-        
+
         if not html_only:
-            js_str = render_template('js.jinja', chart=chart, use_htmx=use_htmx)
+            js_str = render_template(
+                'js.jinja', chart=chart, use_htmx=use_htmx)
 
         return Markup('\n'.join([html_str, js_str]))
-
