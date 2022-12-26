@@ -8,7 +8,7 @@ from .chart import Chart, DataSet
 __all__ = ('ChartJS', 'Chart', 'DataSet')
 
 
-class ChartJS:
+class ChartJSManager:
 
     app: Optional[Flask]
     config: Optional[dict]
