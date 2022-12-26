@@ -1,45 +1,49 @@
-from typing import Optional, Callable
+from typing import Optional, Callable, Dict, Any
 
-from flask import Markup, render_template_string, Flask
+from flask import Flask, Blueprint, render_template, render_template_string
+from markupsafe import Markup
+from .chart import Chart, DataSet
+
+
+__all__ = ('ChartJS', 'Chart', 'DataSet')
 
 
 class ChartJS:
 
     app: Optional[Flask]
-    congfig: Optional[dict]
-    _nonce_callback: Optional[Callable[..., str]] = None
+    config: Optional[dict]
+    _blueprint: Blueprint
+    _nonce_callback: Optional[Callable[[], str]] = None
 
     def __init__(self, app: Optional[Flask] = None) -> None:
+        self._blueprint = Blueprint('chartjs', __name__, template_folder='templates', static_folder='static')
+
         if app is not None:
             self.init_app(app)
 
     def init_app(self, app: Flask) -> None:
         self.app = app
+        self.app.register_blueprint(self._blueprint)
+
+        if not hasattr(app, 'extensions'):
+            app.extensions = {}
+        app.extensions['chartjs'] = self
 
         @app.context_processor
-        def inject_variables() -> dict:
-            return dict(load_chartjs=self.__load_chartjs)
+        def inject_context_variables() -> dict:
+            return dict(load_chartjs=self._render_load_chartjs, render_chart=self._render_chart)
 
-    @property
-    def nonce_callback(self) -> Callable[..., str]:
-        return self._nonce_callback
+    def _render_load_chartjs(self) -> Markup:
+        return Markup(render_template('load_chartjs.jinja'))
 
-    def nonce_loader(self, callback: Callable[..., str]) -> Callable[..., str]:
-        """This sets the callback for loading the current nonce str, needed in case of CSP.
+    def _render_chart(self, chart: Chart, options: Dict[str, Any], html_only: bool = False,
+                      js_only: bool = False, use_htmx: bool = False) -> Markup:
+        html_str, js_str = '', ''
+        if not js_only:
+            html_str = render_template('html.jinja', chart=chart)
+        
+        if not html_only:
+            js_str = render_template('js.jinja', chart=chart, use_htmx=use_htmx)
 
-        Args:
-            callback (Callable[..., str]): _description_
+        return Markup('\n'.join([html_str, js_str]))
 
-        Returns:
-            Callable[..., str]: _description_
-        """
-        self._nonce_callback = callback
-        return self._nonce_callback
-
-    def __load_chartjs(self) -> Markup:
-        nonce_str = ''
-        if self._nonce_callback is not None:
-            nonce_str = f'nonce={self._nonce_callback()} '
-
-        template_string = f'''<script {nonce_str}src="https://cdn.jsdelivr.net/npm/chart.js"></script>'''
-        return Markup(render_template_string(template_string))
