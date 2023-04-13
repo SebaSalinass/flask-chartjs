@@ -1,10 +1,11 @@
 # Flask-ChartJS-Manager
 
-Flask-ChartJS-Manager *(from now on **FCM**)* provides a simple interface to use ChartJS javascript library with Flask.
+Flask-ChartJS-Manager _(from now on **FCM**)_ provides a simple interface to use ChartJS javascript library with Flask.
 
 ```{warning}
 🚧 This package is under heavy development..
 ```
+
 ## Installation
 
 Install the extension with pip:
@@ -14,6 +15,7 @@ pip install flask-chartjs-manager
 ```
 
 Install with poetry:
+
 ```bash
 poetry add flask-chartjs-manager
 ```
@@ -31,6 +33,7 @@ app = Flask(__name__)
 ```
 
 ### Setting up extension
+
 **FCM** works via a ChartJSManager object. To kick things off, we'll set up the `chartjs_manager` by instantiating it and telling it about our Flask app:
 
 ```python
@@ -39,22 +42,18 @@ from flask_chartjs import ChartJSManager
 chartjs_manager = ChartJSManager()
 chartjs_manager.init_app(app)
 ```
-<<<<<<< HEAD
 
 This will make available the `chartjs` object into the templates context so you could load the javascript package easily, like this.
 you can configure a `CHARTJS_LOCAL_PATH` to add a custom location for the package
-
-=======
-### Load resources
-Once the extension is set up, this will make available the `load_chartjs` function into the templates context so you could load the javascript package easily, like this.
->>>>>>> 26450e09a36ecb12425489c84d78ff9387f2aa74
 
 ```html
 <head>
   {{ chartjs.load() }}
 </head>
 ```
+
 ### Creating a chart
+
 Now we will construct a basic chart. For this you have to import `Chart` and `DataSet` objects in order to create a new chart.
 
 ```python
@@ -76,7 +75,9 @@ def chart_example():
     return render_template('path/to/template.html', my_chart=chart)
 
 ```
+
 ### Rendering the chart
+
 Once created you can pass the `Chart` object to render_template and use it likewise.
 
 ```html
@@ -94,44 +95,17 @@ You have the especial kwarg `datasets` to access directly to the datasets option
 ```html
 <!-- load_chartjs() must be called before this line -->
 <script>
-    function addDollarSign(value, index, ticks) {
-        return '$' + value.toLocaleString();
-    }
+  function addDollarSign(value, index, ticks) {
+    return "$" + value.toLocaleString();
+  }
 </script>
-<div class="my-classes">{{ chartjs.render(chart, 
-    options={
-      'datasets': {
-        'line': {
-          'tension': 0.4,
-          'fill': true,
-        }
-      },
-      'elements': {
-        'point': {
-          'pointStyle': 'circle',
-          'radius': 5,
-          'hitRadius': 5,
-          'hoverRadius': 5,
-          'borderWidth': 5,
-        }
-      },
-      'scales': {
-        'y': {
-          'ticks': {                   
-            'callback': '%addDollarSign'
-          }
-        }
-      }
-    },
-    datasets={
-      0: {
-          'borderColor': 'rgba(20, 184, 166, 0.8)',
-          'backgroundColor': 'rgba(20, 184, 166, 0.4)',
-      },
-      1: {
-          'borderColor': 'rgba(239, 68, 68, 0.8)',
-          'backgroundColor': 'rgba(239, 68, 68, 0.4)',
-      },
-    })
-}}</div>
+<div class="my-classes">
+  {{ chartjs.render(chart, options={ 'datasets': { 'line': { 'tension': 0.4,
+  'fill': true, } }, 'elements': { 'point': { 'pointStyle': 'circle', 'radius':
+  5, 'hitRadius': 5, 'hoverRadius': 5, 'borderWidth': 5, } }, 'scales': { 'y': {
+  'ticks': { 'callback': '%addDollarSign' } } } }, datasets={ 0: {
+  'borderColor': 'rgba(20, 184, 166, 0.8)', 'backgroundColor': 'rgba(20, 184,
+  166, 0.4)', }, 1: { 'borderColor': 'rgba(239, 68, 68, 0.8)',
+  'backgroundColor': 'rgba(239, 68, 68, 0.4)', }, }) }}
+</div>
 ```
